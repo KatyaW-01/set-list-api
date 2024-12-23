@@ -1,4 +1,4 @@
-class Api::V1::ImagesController < ApplicationController
+class Api::V1::VideosController < ApplicationController
   def show
     artist = params[:artist]
 
@@ -6,20 +6,19 @@ class Api::V1::ImagesController < ApplicationController
       faraday.headers["Authorization"] = Rails.application.credentials.pexels[:key]
     end
 
-    response = conn.get("/v1/search", { query: artist })
+    response = conn.get("/videos/search", { query: artist })
     # OR response = conn.get("/v1/search?query=#{artist})
 
     json = JSON.parse(response.body, symbolize_names: true)
-    first_photo = json[:photos][0]
+    first_video = json[:videos][0]
 
     formatted_json = {
-      id: nil,
-      type: "image",
+      id: first_video[:id],
+      type: "video",
       attributes: {
-        image_url: first_photo[:url],
-        photographer: first_photo[:photographer],
-        photographer_url: first_photo[:photographer_url],
-        alt_text: first_photo[:alt]
+        video_url: first_video[:url],
+        artist: first_video[:user][:name],
+        artist_url: first_video[:user][:url],
       }
     }
 
