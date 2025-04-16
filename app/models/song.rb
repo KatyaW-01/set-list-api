@@ -1,4 +1,6 @@
 class Song < ApplicationRecord
+  belongs_to :artist_id
+  
   before_save { |song| song.popularity = calculate_popularity }
 
   def average_plays_per_day
