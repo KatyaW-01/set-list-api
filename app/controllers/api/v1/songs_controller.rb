@@ -4,12 +4,34 @@ class Api::V1::SongsController < ApplicationController
   end
 
   def show
+    begin
     render json: SongSerializer.format_song(Song.find(params[:id]))
+    rescue ActiveRecord::RecordNotFound => error #the error that was in the terminal
+      render json: {
+        "errors": [
+          {
+            "status": "404",
+            "message": error.message
+          }
+        ]
+      }, status: 404 #by convention should be status message (status: :not_found)
+    end
   end
 
   def create
+    begin
     song = Song.create!(song_params)
     render json: song, status: 201
+    rescue  ActiveRecord::RecordInvalid => error
+      render json: {
+        "errors": [
+          {
+            "status": "422",
+            "message": error.message
+          }
+        ]
+      }, status: :unprocessable_entity
+    end
   end
 
   def update
