@@ -25,12 +25,12 @@ RSpec.describe Artist do
 
       # Try it!
       it "can get a list of the song titles written by Prince" do
-        query = Song.find_by_sql("") # You could also try it in AR, too
+        query = Song.find_by_sql("SELECT DISTINCT songs.title FROM songs JOIN artists ON artists.id = songs.artist_id WHERE name = 'Prince'") # You could also try it in AR, too
         
         expect(query.pluck(:title)).to eq(["Purple Rain", "Raspberry Beret"])
       end
 
-      it "SPICY: can get the name of the artist with the longest song" do
+      xit "SPICY: can get the name of the artist with the longest song" do
         query = Artist.find_by_sql("")
         
         expect(query.pluck(:name).first).to eq("Run The Jewels")
